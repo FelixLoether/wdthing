@@ -1,0 +1,9 @@
+{
+  "name": "wdthing",
+  "author": "Felix Loether",
+  "dependencies": {
+    "mongoose": "2.x.x",
+    "everyauth": "0.x.x"
+  },
+  "engine": "node >= 0.6.1"
+}
