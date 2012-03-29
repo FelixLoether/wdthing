@@ -7,6 +7,7 @@ var app = connect(
   connect.session({secret: config.session.secret})
 );
 
+var db = require('./db');
 var router = require('./router')(app);
 var users = require('./users')(db);
 var auth = require('./auth')(app, db, router);
