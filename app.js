@@ -10,6 +10,7 @@ var db = require('./db');
 var router = require('./router')(app);
 var users = require('./users')(db);
 var auth = require('./auth')(app, db, router);
+var invitation = require('./invitations')(db, router);
 
 router.register('index', '/');
 router.get(router.url('index'), function (req, res) {

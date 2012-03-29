@@ -5,11 +5,9 @@ var users = {};
 
 module.exports = function (app, db, router) {
   // Stuff used by all modules.
-  //everyauth.everymodule.userPkey('auth');
   everyauth.everymodule.findUserById(function (id, cb) {
-    if (users[id]) {
+    if (users[id])
       cb(null, users[id]);
-    }
     else
       cb('Invalid user: ' + id);
   });
@@ -21,31 +19,62 @@ module.exports = function (app, db, router) {
     this.redirect(res, req.session.redirectUrl || this.logoutRedirectPath());
   });
 
-  var findOrCreateUser = function (type, id, name, promise) {
+  var findOrCreateUser = function (session, type, id, name, promise) {
     var auth = type + '-' + id;
+
+    if (session && session.invitation) {
+      var user;
+
+      var userCreated = function (err) {
+        if (err)
+          return promise.fulfill([err]);
+
+        users[auth] = user;
+        promise.fulfill(user);
+      };
+
+      var createUser = function (err) {
+        var u = db.model('User');
+        user = new u();
+        user.id = auth;
+        user.name = name;
+        user.save(userCreated);
+      };
+
+      var removeInvitation = function (err) {
+        if (err)
+          return promise.fulfill([err]);
+
+        delete session.invitation;
+        createUser();
+      };
+
+      var invitationFound = function (err, invitation) {
+        if (err)
+          return promise.fulfill([err]);
+
+        invitation.remove(removeInvitation);
+      };
+
+      db.model('Invitation').findOne(
+        {id: session.invitation}, invitationFound);
+
+      return promise;
+    }
+
     if (users[auth]) {
       return users[auth];
     }
 
-    var User = db.model('User');
-
-    User.findOne({id: auth}, function (err, user) {
-      if (user) {
+    db.model('User').findOne({id: auth}, function (err, user) {
+      if (err) {
+        promise.fulfill([err]);
+      } else if (user) {
         users[auth] = user;
-        return promise.fulfill(user);
+        promise.fulfill(user);
+      } else {
+        promise.fulfill([new Error('User not found')]);
       }
-
-      user = new User();
-      user.id = auth;
-      user.name = name;
-      user.save(function (err) {
-        if (err) {
-          return promise.fulfill([err]);
-        }
-
-        users[auth] = user;
-        return promise.fulfill(user);
-      });
     });
 
     return promise;
