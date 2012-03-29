@@ -9,6 +9,7 @@ module.exports = function (app, db, router) {
   router.get(router.url('login'), function (req, res) {
     req.session.redirectUrl = req.headers.referer;
     // TODO: Show the login options.
+    res.end(req.user);
   });
 
   router.get(config.redirectPath, function (req, res) {
@@ -21,45 +22,49 @@ module.exports = function (app, db, router) {
   //everyauth.everymodule.userPkey('auth');
 
   everyauth.everymodule.findUserById(function (id, cb) {
-    if (users[id])
+    console.log('finding...');
+    if (users[id]) {
+      console.log('found', users[id]);
       cb(null, users[id]);
+    }
     else
       cb('Invalid user: ' + id);
   });
 
   everyauth.everymodule.handleLogout(function (req, res) {
-    delete users[req.user.id];
+    if (req.user)
+      delete users[req.user.id];
     req.logout();
     this.redirect(res, req.session.redirectUrl || this.logoutRedirectPath());
   });
 
   var findOrCreateUser = function (type, id, name, promise) {
-    if (users[id] && users[id].auth == type)
-      return users[id];
-
     var auth = type + '-' + id;
+    if (users[auth]) {
+      console.log('Found cached', users[auth]);
+      return users[auth];
+    }
+
     var User = db.model('User');
 
     User.findOne({id: auth}, function (err, user) {
       if (user) {
-        console.log('Found user!', id);
-        users[id] = user;
+        users[auth] = user;
+        console.log('db', user);
         return promise.fulfill(user);
       }
 
-      console.log('Create user', id);
       user = new User();
       user.id = auth;
       user.name = name;
       user.save(function (err) {
         if (err) {
-          console.log('Error!');
+          console.log('create error', err);
           return promise.fulfill([err]);
         }
 
-        console.log('Save user', id);
-        console.log(user);
-        users[id] = user;
+        users[auth] = user;
+        console.log('created', user);
         return promise.fulfill(user);
       });
     });
@@ -72,4 +77,6 @@ module.exports = function (app, db, router) {
 
   // Make sure the middleware is used.
   everyauth.helpExpress(app);
+  app.use(everyauth.middleware());
 };
+
