@@ -8,6 +8,7 @@ var app = connect(
 );
 
 var router = require('./router')(app);
+var users = require('./users')(db);
 var auth = require('./auth')(app, db, router);
 
 router.register('index', '/');
