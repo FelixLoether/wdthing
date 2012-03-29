@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "dependencies": {
     "mongoose": "2.x.x",
-    "everyauth": "0.6.x",
+    "everyauth": "0.2.31",
     "connect": "1.8.x",
     "express": "2.5.x"
   },
