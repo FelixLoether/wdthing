@@ -20,4 +20,5 @@ router.get(router.url('index'), function (req, res) {
     res.end('log in at ' + router.url('login'));
 });
 
+app.use(router);
 app.listen(8080);
