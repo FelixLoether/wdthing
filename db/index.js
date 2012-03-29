@@ -1,4 +1,4 @@
-var config = require('./config');
+var config = require('./secret-config');
 var mongoose = require('mongoose');
 
 mongoose.connect(config.uri);
