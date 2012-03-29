@@ -1,6 +1,7 @@
 {
   "name": "wdthing",
   "author": "Felix Loether",
+  "version": "0.0.1",
   "dependencies": {
     "mongoose": "2.x.x",
     "everyauth": "0.x.x"
