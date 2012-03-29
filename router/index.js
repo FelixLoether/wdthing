@@ -20,13 +20,11 @@ module.exports = function (app) {
     return '<a href="' + url(name, data) + '">' + text + '</a>';
   };
 
-  var router = {};
+  var router = Object.create(app);
 
   router.register = register;
   router.url = url;
   router.link = link;
-  router.get = app.get.bind(app);
-  router.post = app.post.bind(app);
 
   return router;
 };
