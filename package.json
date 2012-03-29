@@ -5,7 +5,8 @@
   "dependencies": {
     "mongoose": "2.x.x",
     "everyauth": "0.x.x",
-    "connect": "1.8.x"
+    "connect": "1.8.x",
+    "express": "2.5.x"
   },
   "engine": "node >= 0.6.1"
 }

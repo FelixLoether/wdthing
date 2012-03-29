@@ -1,11 +1,10 @@
 var config = require('./config');
-var connect = require('connect');
+var express = require('express');
 
-var app = connect(
-  connect.bodyParser(),
-  connect.cookieParser(),
-  connect.session({secret: config.session.secret})
-);
+var app = express.createServer();
+app.use(express.bodyParser());
+app.use(express.cookieParser());
+app.use(express.session(config.session));
 
 var db = require('./db');
 var router = require('./router')(app);
@@ -20,5 +19,4 @@ router.get(router.url('index'), function (req, res) {
     res.end('log in at ' + router.url('login'));
 });
 
-app.use(router);
-app.listen(8080);
+app.listen(config.port);

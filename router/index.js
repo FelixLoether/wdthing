@@ -1,4 +1,4 @@
-module.exports = function () {
+module.exports = function (app) {
   var urls = {};
 
   var register = function (name, url, filler) {
@@ -20,32 +20,13 @@ module.exports = function () {
     return '<a href="' + url(name, data) + '">' + text + '</a>';
   };
 
-  var gets = [];
-  var posts = [];
-
-  var get = function (url, cb) {
-    gets.push([url, cb]);
-  };
-
-  var post = function (url, cb) {
-    posts.push([url, cb]);
-  };
-
-  var router = function (app) {
-    gets.forEach(function (e) {
-      app.get(e[0], e[1]);
-    });
-
-    posts.forEach(function (e) {
-      app.post(e[0], e[1]);
-    });
-  };
+  var router = {};
 
   router.register = register;
   router.url = url;
   router.link = link;
-  router.get = get;
-  router.post = post;
+  router.get = app.get.bind(app);
+  router.post = app.post.bind(app);
 
   return router;
 };

@@ -18,13 +18,13 @@ module.exports = function (app, db, router) {
   });
 
   // Stuff used by all modules.
-  everyauth.everymodule.userPkey('_id');
+  //everyauth.everymodule.userPkey('auth');
 
   everyauth.everymodule.findUserById(function (id, cb) {
     if (users[id])
       cb(null, users[id]);
     else
-      cb('Invalid user');
+      cb('Invalid user: ' + id);
   });
 
   everyauth.everymodule.handleLogout(function (req, res) {
@@ -38,17 +38,27 @@ module.exports = function (app, db, router) {
       return users[id];
 
     var auth = type + '-' + id;
+    var User = db.model('User');
 
-    db.model('User').findOne({auth: auth}, function (err, user) {
+    User.findOne({id: auth}, function (err, user) {
       if (user) {
+        console.log('Found user!', id);
         users[id] = user;
         return promise.fulfill(user);
       }
 
-      db.model('User').save({auth: auth, name: name}, function (err, user) {
-        if (err)
+      console.log('Create user', id);
+      user = new User();
+      user.id = auth;
+      user.name = name;
+      user.save(function (err) {
+        if (err) {
+          console.log('Error!');
           return promise.fulfill([err]);
+        }
 
+        console.log('Save user', id);
+        console.log(user);
         users[id] = user;
         return promise.fulfill(user);
       });
@@ -61,5 +71,5 @@ module.exports = function (app, db, router) {
   google(everyauth, config, findOrCreateUser);
 
   // Make sure the middleware is used.
-  app.use(everyauth.middleware());
+  everyauth.helpExpress(app);
 };

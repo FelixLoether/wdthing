@@ -6,6 +6,6 @@ module.exports = {
   google: {
     id: secret.google.id,
     secret: secret.google.secret,
-    scope: 'https://www.googleapis.com/auth/userinfo.email'
+    scope: 'https://www.googleapis.com/auth/userinfo.profile'
   }
 };
