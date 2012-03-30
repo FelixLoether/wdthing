@@ -29,7 +29,6 @@ var auth = require('./auth')(app, db, router);
 require('./users')(db);
 require('./categories')(db, router, auth);
 require('./posts')(db, router, auth);
-require('./tags')(db, router);
 require('./invitations')(db, router, auth);
 
 router.register('index', '/');

@@ -71,7 +71,7 @@ module.exports = function (db, router, auth) {
     var cat = req.category;
     var Post = db.model('Post');
 
-    Post.find({category: cat._id}, function (err, posts) {
+    Post.find({category: cat._id}).desc('date').run(function (err, posts) {
       if (err)
         return next(err);
 

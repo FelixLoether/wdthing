@@ -69,7 +69,7 @@ module.exports = function (db, router, auth) {
       if (err)
         return next(err);
 
-      res.redirect(router.url('post', {cat: p.category, post: p}), 303);
+      res.redirect(router.url('post', {cat: req.body.category, post: p}), 303);
     });
   });
 
