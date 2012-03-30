@@ -63,6 +63,7 @@ module.exports = function (app, db, router) {
     }
 
     if (users[auth]) {
+      console.log('auth');
       return users[auth];
     }
 
@@ -80,25 +81,41 @@ module.exports = function (app, db, router) {
     return promise;
   };
 
+  var handleFail = function (req, res) {
+    res.redirect(router.url('login'), 303);
+  };
+
   // Add the auth types.
-  google(everyauth, config, findOrCreateUser);
+  google(everyauth, config, findOrCreateUser, handleFail);
 
   // Make sure the middleware is used.
   everyauth.helpExpress(app);
   app.use(everyauth.middleware());
   
   // Register needed urls.
+  router.register('logout', '/logout');
   router.register('login', config.loginPath);
   router.get(router.url('login'), function (req, res) {
     req.session.redirectUrl = req.headers.referer;
-    // TODO: Show the login options.
-    res.end(req.user);
+    console.log('redirect', req.headers.referer);
+    res.render('login', {title: 'login'});
   });
 
   router.get(config.redirectPath, function (req, res) {
-    var url = req.session.redirectUrl || router.url('index');
+    var url = req.session.redirectUrl;
     delete req.session.redirectUrl;
+
+    url = (url != router.url('login') && url) || router.url('index');
+
     res.redirect(url, 303);
   });
+  
+  // Return middleware for login requirement.
+  return function (req, res, next) {
+    if (req.user)
+      next();
+    else
+      res.redirect(router.url('login'), 403);
+  };
 };
 

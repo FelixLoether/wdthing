@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+  <head>
+    <title>wdthing - <%= title %></title>
+  </head>
+
+  <body>
+    <nav>
+      <li><%- router.link('index', 'Home') %></li>
+      <% if (!everyauth.loggedIn) { %>
+        <li><%- router.link('login', 'Log in') %></li>
+      <% } else { %>
+        <li><%- router.link('logout', 'Log out') %></li>
+      <% } %>
+    </nav>
+    <%- body %>
+  </body>
+</html>

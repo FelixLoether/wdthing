@@ -1,11 +1,12 @@
-module.exports = function (everyauth, config, findOrCreateUser) {
+module.exports = function (everyauth, config, findOrCreateUser, handleFail) {
   everyauth.google
     .appId(config.google.id)
     .appSecret(config.google.secret)
     .scope(config.google.scope)
     .redirectPath(config.redirectPath)
+    .handleAuthCallbackError(handleFail)
     .findOrCreateUser(function (session, t, te, data) {
       return findOrCreateUser(
-        session, 'google', data.id, data.name, new this.Promise());
+        session, 'google', data.id, data.name, this.Promise());
     });
 };

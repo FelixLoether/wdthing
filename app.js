@@ -5,19 +5,51 @@ var app = express.createServer();
 app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session(config.session));
+app.use(function (req, res, next) {
+  if (req.url.slice(0, 6) === '/auth/')
+    return next();
+
+  if (req.url === '/')
+    return next();
+
+  // Strip trailing slash and make the url lowercase. And remove the query
+  // part, we're not going to be using it.
+  var url = req.url.toLowerCase().replace(/\?.*/, '').replace(/\/$/, '');
+
+  if (url != req.url)
+    res.redirect(url);
+  else
+    next();
+});
 
 var db = require('./db');
 var router = require('./router')(app);
-var users = require('./users')(db);
 var auth = require('./auth')(app, db, router);
-var invitation = require('./invitations')(db, router);
+
+require('./users')(db);
+require('./categories')(db, router, auth);
+require('./posts')(db, router, auth);
+require('./tags')(db, router);
+require('./invitations')(db, router, auth);
 
 router.register('index', '/');
 router.get(router.url('index'), function (req, res) {
-  if (req.user)
-    res.end('name: ' + req.user.name);
-  else
-    res.end('log in at ' + router.url('login'));
+  db.model('Category').find({}, function (err, categories) {
+    if (err)
+      return next(err);
+
+    res.render('index', {
+      title: 'index',
+      categories: categories
+    });
+  });
+});
+
+app.set('view engine', 'ejs');
+app.dynamicHelpers({
+  router: function () {
+    return router;
+  }
 });
 
 app.listen(config.port);

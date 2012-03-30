@@ -6,7 +6,8 @@
     "mongoose": "2.x.x",
     "everyauth": "0.2.32",
     "connect": "1.8.x",
-    "express": "2.5.x"
+    "express": "2.5.x",
+    "ejs": "0.7.x"
   },
   "engine": "node >= 0.6.1"
 }

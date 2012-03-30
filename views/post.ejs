@@ -1,0 +1,10 @@
+<h2><%= post.title %></h2>
+<% if (everyauth.loggedIn) { %>
+  <small>
+    <%- router.link('edit-post', 'edit', {cat: category, post: post}) %>
+  </small>
+<% } %>
+<p>Date: <%= post.date %></p>
+<div><%= post.content %></div>
+<p>Tags: <%= post.tags %></p>
+<%- router.link('category', 'Back to Category', category) %>
