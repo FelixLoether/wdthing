@@ -78,8 +78,10 @@ var updateCategories = function () {
   }).seq(function () {
     var i;
 
-    for (i = 0; i < arguments.length; i += 1)
+    for (i = 0; i < arguments.length; i += 1) {
+      arguments[i].category = categories[i];
       categories[i].post = arguments[i];
+    }
   });
 };
 

@@ -19,8 +19,8 @@ module.exports = function (db, router, auth, marked, prepareEdit) {
     p.tags = req.body.tags;
     p.rawContent = req.body.content;
     p.content = marked(req.body.content);
+    p.category = req.body.category;
     p.categoryid = req.body.category._id;
-    p.categorySlug = req.body.category.slug;
 
     p.save(function (err) {
       if (err)

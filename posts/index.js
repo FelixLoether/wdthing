@@ -11,11 +11,6 @@ module.exports = function (db, router, auth, marked) {
       unique: true,
       index: true
     },
-    categorySlug: {
-      type: String,
-      match: /[\w\-]/,
-      required: true
-    },
     categoryid: {
       type: db.Schema.ObjectId,
       required: true,
