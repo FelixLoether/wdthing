@@ -1,9 +1,12 @@
 <form method="post" action="">
   <label for="name">Title:</label>
-  <input type="text" name="name" value="<%= category.name %>"></input>
+  <input type="text" name="name" value="<%= category.name %>">
 
   <label for="writer">Writer:</label>
-  <input type="text" name="writer" value="<%= writer.name %>"></input>
+  <input type="text" name="writer" value="<%= writer.name %>">
+
+  <label for="weekday">Weekday (0-6):</label>
+  <input type="text" name="weekday" value="<%= category.weekday %>">
 
   <button type="submit">Edit</button>
 </form>

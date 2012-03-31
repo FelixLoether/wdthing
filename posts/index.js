@@ -1,4 +1,4 @@
-module.exports = function (db, router, auth) {
+module.exports = function (db, router, auth, marked) {
   var Post = new db.Schema({
     title: {
       type: String,
@@ -11,10 +11,19 @@ module.exports = function (db, router, auth) {
       unique: true,
       index: true
     },
+    categorySlug: {
+      type: String,
+      match: /[\w\-]/,
+      required: true
+    },
     category: {
       type: db.Schema.ObjectId,
       required: true,
       index: true
+    },
+    rawContent: {
+      type: String,
+      required: true
     },
     content: {
       type: String,
@@ -32,6 +41,7 @@ module.exports = function (db, router, auth) {
   });
 
   db.model('Post', Post);
+  var PostSchema = Post;
   Post = db.model('Post');
 
   router.register('new-post', '/new-post');
@@ -62,20 +72,21 @@ module.exports = function (db, router, auth) {
     p.title = req.body.title;
     p.slug = req.body.slug;
     p.tags = req.body.tags;
-    p.content = req.body.content;
+    p.rawContent = req.body.content;
+    p.content = marked(req.body.content);
     p.category = req.body.category._id;
+    p.categorySlug = req.body.category.slug;
 
     p.save(function (err) {
       if (err)
         return next(err);
 
-      res.redirect(router.url('post', {cat: req.body.category, post: p}), 303);
+      res.redirect(router.url('post', p), 303);
     });
   });
 
-  router.register('post', '/:cat/:id', function (obj) {
-    var cat = obj.cat, post = obj.post;
-    return '/' + cat.slug + '/' + post.slug;
+  router.register('post', '/:cat/:id', function (post) {
+    return '/' + post.categorySlug + '/' + post.slug;
   });
 
   var findPost = function (req, res, next) {
@@ -116,9 +127,8 @@ module.exports = function (db, router, auth) {
     });
   });
 
-  router.register('edit-post', '/:cat/:id/edit', function (obj) {
-    var cat = obj.cat, post = obj.post;
-    return '/' + cat.slug + '/' + post.slug + '/edit';
+  router.register('edit-post', '/:cat/:id/edit', function (post) {
+    return '/' + post.categorySlug + '/' + post.slug + '/edit';
   });
 
   router.get(router.url('edit-post'), auth, findPost, function (req, res, next){
@@ -145,14 +155,18 @@ module.exports = function (db, router, auth) {
     var p = req.post;
     p.title = req.body.title;
     p.tags = req.body.tags;
-    p.content = req.body.content;
+    p.rawContent = req.body.content;
+    p.content = marked(req.body.content);
     p.category = req.body.category._id;
+    p.categorySlug = req.body.category.slug;
 
     p.save(function (err) {
       if (err)
         return next(err);
 
-      res.redirect(router.url('post', {cat: req.body.category, post: p}), 303);
+      res.redirect(router.url('post', p), 303);
     });
   });
+
+  return PostSchema;
 };

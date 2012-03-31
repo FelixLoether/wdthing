@@ -1,9 +1,3 @@
-<% if (everyauth.loggedIn) { %>
-  <p>Hello, <%= user.name %>!</p>
-<% } %>
-
-<ol>
-  <% categories.forEach(function (category) { %>
-    <li><%- router.link('category', category.name, category) %></li>
-  <% }) %>
+<ol class="unstyled">
+  <%- partial('post-partial', posts) %>
 </ol>

@@ -1,0 +1,11 @@
+<% var category = categories[indexInCollection] %>
+<li class="well" style="padding: 1em">
+  <h3><%- router.link('category', category.name, category) %></h3>
+  <% if (category.post && category.post.content) { %>
+    <h4><%= category.post.title %></h4>
+    <%- category.post.content.split('</p>', 1)[0] %>
+    <a href="<%= router.url('post', category.post) %>">
+      Read&nbsp;more&nbsp;»</a>
+    </p> <% /* Closes the post preview paragraph */ %>
+  <% } %>
+</li>

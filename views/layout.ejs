@@ -1,18 +1,57 @@
 <!doctype html>
 <html>
   <head>
+    <meta charset="utf-8">
     <title>wdthing - <%= title %></title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css">
   </head>
 
   <body>
-    <nav>
-      <li><%- router.link('index', 'Home') %></li>
-      <% if (!everyauth.loggedIn) { %>
-        <li><%- router.link('login', 'Log in') %></li>
-      <% } else { %>
-        <li><%- router.link('logout', 'Log out') %></li>
-      <% } %>
-    </nav>
-    <%- body %>
+    <div class="container">
+      <div class="row">
+        <% if (everyauth.loggedIn) { %>
+          <div class="span3 offset8">
+            Hello, <%= user.name %>
+          </div>
+          <div class="span1" style="text-align: right">
+            <%- router.link('logout', 'log out') %>
+          </div>
+        <% } else { %>
+          <div class="span1 offset11" style="text-align: right">
+            <%- router.link('login', 'log in') %>
+          </div>
+        <% } %>
+      </div>
+      <div class="row">
+        <div class="span8">
+          <%- body %>
+        </div>
+        <div class="span4">
+          <ul class="breadcrumb">
+            <li>
+              <%- router.link('index', 'Home') %>
+            <% if (category) { %>
+                <span class="divider">/</span>
+              </li>
+              <li>
+                <%- router.link('category', category.name, category) %>
+
+              <% if (post) { %>
+                  <span class="divider">/</span>
+                </li>
+                <li>
+                  <%- router.link('post', post.title,
+                    {cat: category, post: post}) %>
+              <% } %>
+            <% } %>
+            </li>
+          </ul>
+          <nav class="nav">
+            <%- partial('category-partial', categories) %>
+          </nav>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

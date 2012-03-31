@@ -5,7 +5,5 @@
   </small>
 <% } %>
 <ol>
-  <% posts.forEach(function (post) { %>
-    <li><%- router.link('post', post.title, {cat: category, post: post}) %></li>
-  <% }) %>
+  <%- partial('post-partial', posts) %>
 </ol>

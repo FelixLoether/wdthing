@@ -14,10 +14,18 @@ module.exports = function (db, router, auth) {
       unique: true,
       index: true
     },
+    weekday: {
+      type: Number,
+      required: true,
+      unique: true,
+      min: 0,
+      max: 6
+    },
     writer: db.Schema.ObjectId // User
   });
 
   db.model('Category', Category);
+  var Cat = Category;
   Category = db.model('Category');
 
   router.register('new-category', '/new-category');
@@ -30,6 +38,7 @@ module.exports = function (db, router, auth) {
     c.name = req.body.name;
     c.slug = req.body.slug ||
       c.name.replace(/\W+/g, '-').replace(/-$/, '').toLowerCase();
+    c.weekday = +req.body.weekday;
 
     db.model('User').findOne({name: req.body.writer}, function (err, user) {
       if (err)
@@ -115,6 +124,7 @@ module.exports = function (db, router, auth) {
 
     var cat = req.category;
     cat.name = req.body.name;
+    cat.weekday = req.body.weekday;
 
     if (req.body.user) {
       var User = db.model('User');
@@ -142,4 +152,6 @@ module.exports = function (db, router, auth) {
       });
     }
   });
+
+  return Cat;
 };
