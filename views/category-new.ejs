@@ -1,15 +1,38 @@
-<form method="post" action="">
-  <label for="name">Title:</label>
-  <input type="text" name="name">
+<form method="post" action="" class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="name">Name</label>
+    <div class="controls">
+      <input type="text" name="name">
+    </div>
+  </div>
 
-  <label for="slug">Slug:</label>
-  <input type="text" name="slug">
+  <div class="control-group">
+    <label class="control-label" for="slug">Slug</label>
+    <div class="controls">
+      <input type="text" name="slug">
+      <small class="help-inline">Filled automatically if left blank.</small>
+    </div>
+  </div>
 
-  <label for="writer">Writer:</label>
-  <input type="text" name="writer">
+  <div class="control-group">
+    <label class="control-label" for="writer">Writer</label>
+    <div class="controls">
+      <input type="text" name="writer">
+      <small class="help-inline">
+        Name of the person writing this category.
+      </small>
+    </div>
+  </div>
 
-  <label for="weekday">Weekday (0-6):</label>
-  <input type="text" name="weekday">
+  <div class="control-group">
+    <label class="control-label" for="weekday">Weekday</label>
+    <div class="controls">
+      <input type="text" name="weekday">
+      <small class="help-inline">0 - 6</small>
+    </div>
+  </div>
 
-  <button type="submit">Create</button>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Create</button>
+  </div>
 </form>

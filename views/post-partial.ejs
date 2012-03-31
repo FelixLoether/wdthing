@@ -1,5 +1,24 @@
 <% var post = posts[indexInCollection] %>
-<h2><%= post.title %></h2>
-<% var preview = post.content.split('</p>', 1).join('</p>') %>
-<%- preview %></p>
+<h2>
+  <%- router.link('post', post.title, post) %>
+  <small>
+    <% if (show === 'category') { %>
+      <%- router.link('category', post.category.name, post.category) %>
+    <% } else { %>
+      <%= moment(post.date).fromNow() %>
+    <% } %>
+  </small>
+  <% if (everyauth.loggedIn) { %>
+    <span><%- router.link('edit-post', 'edit', post) %></span>
+  <% } %>
+</h2>
+<%
+var preview = post.content.split('</p>')
+                          .slice(0, 3)
+                          .join('</p>')
+                          .replace(/\s+$/, '');
+  if (preview.slice(-4) !== '</p>')
+    preview += '</p>';
+%>
+<%- preview %>
 <%- router.link('post', 'Read more »', post) %>

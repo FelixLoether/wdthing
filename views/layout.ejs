@@ -5,31 +5,75 @@
     <title>wdthing - <%= title %></title>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css">
+    <style>
+      h1 > a, h1 > small > a,
+      h2 > a, h2 > small > a,
+      h4 > a, h4 > small > a {
+        color: inherit;
+      }
+
+      h1 > span > a,
+      h2 > span > a,
+      h3 > span > a,
+      h4 > span > a {
+        font-weight: normal;
+        font-size: small;
+      }
+
+      .logout, .login {
+        text-align: right;
+      }
+
+      .status {
+        margin-bottom: 5px;
+      }
+
+      .post-content {
+        border-bottom: 1px solid #EEEEEE;
+      }
+
+      .post-details {
+        margin-top: 5px;
+      }
+
+      .post-details > p {
+        margin: 0;
+      }
+
+      textarea {
+        height: 500px;
+        width: 95%;
+      }
+    </style>
   </head>
 
   <body>
     <div class="container">
-      <div class="row">
+      <div class="row status">
         <% if (everyauth.loggedIn) { %>
           <div class="span3 offset8">
             Hello, <%= user.name %>
           </div>
-          <div class="span1" style="text-align: right">
+          <div class="span1 logout">
             <%- router.link('logout', 'log out') %>
           </div>
         <% } else { %>
-          <div class="span1 offset11" style="text-align: right">
+          <div class="span1 offset11 login">
             <%- router.link('login', 'log in') %>
           </div>
         <% } %>
       </div>
       <div class="row">
         <div class="span8">
+          <h1>
+            <a href="<%- router.url('index') %>">wdthing<small>.com</small></a>
+          </h1>
           <%- body %>
         </div>
         <div class="span4">
           <ul class="breadcrumb">
             <li>
+              <i class="icon-home"></i>
               <%- router.link('index', 'Home') %>
             <% if (category) { %>
                 <span class="divider">/</span>

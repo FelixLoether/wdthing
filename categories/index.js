@@ -25,7 +25,7 @@ module.exports = function (db, router, auth) {
   });
 
   db.model('Category', Category);
-  var Cat = Category;
+  var CategorySchema = Category;
   Category = db.model('Category');
 
   router.register('new-category', '/new-category');
@@ -80,14 +80,19 @@ module.exports = function (db, router, auth) {
     var cat = req.category;
     var Post = db.model('Post');
 
-    Post.find({category: cat._id}).desc('date').run(function (err, posts) {
+    Post.find({categoryid: cat._id}).desc('date').run(function (err, posts) {
       if (err)
         return next(err);
 
+      posts = posts || [];
+
+      var i;
+      for (i = 0; i < posts.length; i += 1)
+        posts[i].category = cat;
+
       res.render('category', {
         title: cat.name,
-        category: cat,
-        posts: posts || []
+        posts: posts
       });
     });
   });
@@ -111,7 +116,6 @@ module.exports = function (db, router, auth) {
 
       res.render('category-edit', {
         title: 'edit ' + cat.name,
-        category: cat,
         writer: user
       });
     });
@@ -153,5 +157,5 @@ module.exports = function (db, router, auth) {
     }
   });
 
-  return Cat;
+  return CategorySchema;
 };

@@ -2,6 +2,7 @@ var config = require('./config');
 var express = require('express');
 var seq = require('seq');
 var marked = require('marked');
+var moment = require('moment');
 
 marked.setOptions({
   gfm: true,
@@ -42,9 +43,19 @@ require('./invitations')(db, router, auth);
 
 router.register('index', '/');
 router.get(router.url('index'), function (req, res) {
-  db.model('Post').find({}).desc('date').run(function (err, posts) {
-    if (err)
-      return next(err);
+  var posts = [];
+
+  seq().seq(function () {
+    db.model('Post').find({}).desc('date').run(this);
+  }).flatten()
+  .parMap(function (post, i) {
+    posts[i] = post;
+    db.model('Category').findById(post.categoryid, this);
+  }).seq(function () {
+    var i;
+
+    for (i = 0; i < arguments.length; i += 1)
+      posts[i].category = arguments[i];
 
     res.render('index', {
       title: 'index',
@@ -53,63 +64,49 @@ router.get(router.url('index'), function (req, res) {
   });
 });
 
-app.set('view engine', 'ejs');
-(function () {
-  var categories = [];
-/*
-  var updateCategories = function (next) {
-    db.model('Category').find({}).asc('weekday').run(function (err, cats) {
-      if (!cats)
-        return next();
+var categories = [];
 
-      categories = cats;
+var updateCategories = function () {
+  seq().seq(function () {
+    db.model('Category').find({}).asc('weekday').run(this);
+  }).flatten()
+  .parMap(function (category, i) {
+    categories[i] = category;
 
-      categories.forEach(function (category) {
-        db.model('Post').find({category: category._id}).desc('date')
-          .limit(1).run(function (err, post) {
-            if (!post)
-            category.post = (post && post[0]) || category.post;
-          });
-      });
-    });
-  };*/
+    db.model('Post').findOne({categoryid: category._id}).desc('date').limit(1)
+      .run(this);
+  }).seq(function () {
+    var i;
 
-  var updateCategories = function () {
-    seq().seq(function () {
-      db.model('Category').find({}).asc('weekday').run(this);
-    }).flatten()
-    .parMap(function (category, i) {
-      categories[i] = category;
-
-      db.model('Post').findOne({category: category._id}).desc('date').limit(1)
-        .run(this);
-    }).seq(function () {
-      var i;
-
-      for (i = 0; i < arguments.length; i += 1)
-        categories[i].post = arguments[i];
-    });
-  };
-
-  CategorySchema.post('save', updateCategories);
-  PostSchema.post('save', updateCategories);
-
-  updateCategories();
-
-  app.dynamicHelpers({
-    category: function (req) {
-      return req.category;
-    },
-    post: function (req) {
-      return req.post;
-    },
-    router: function () {
-      return router;
-    },
-    categories: function () {
-      return categories;
-    }
+    for (i = 0; i < arguments.length; i += 1)
+      categories[i].post = arguments[i];
   });
-}());
+};
+
+CategorySchema.post('save', updateCategories);
+PostSchema.post('save', updateCategories);
+
+updateCategories();
+
+app.set('view engine', 'ejs');
+
+app.dynamicHelpers({
+  category: function (req) {
+    return req.category;
+  },
+  post: function (req) {
+    return req.post;
+  },
+  router: function () {
+    return router;
+  },
+  categories: function () {
+    return categories;
+  },
+  moment: function () {
+    return moment;
+  }
+});
+
 
 app.listen(config.port);

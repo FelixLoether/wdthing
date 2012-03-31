@@ -16,7 +16,7 @@ module.exports = function (db, router, auth, marked) {
       match: /[\w\-]/,
       required: true
     },
-    category: {
+    categoryid: {
       type: db.Schema.ObjectId,
       required: true,
       index: true
@@ -74,7 +74,7 @@ module.exports = function (db, router, auth, marked) {
     p.tags = req.body.tags;
     p.rawContent = req.body.content;
     p.content = marked(req.body.content);
-    p.category = req.body.category._id;
+    p.categoryid = req.body.category._id;
     p.categorySlug = req.body.category.slug;
 
     p.save(function (err) {
@@ -99,7 +99,7 @@ module.exports = function (db, router, auth, marked) {
       if (!post)
         return next();
 
-      db.model('Category').findById(post.category, function (err, cat) {
+      db.model('Category').findById(post.categoryid, function (err, cat) {
         if (err)
           return next(err);
 
@@ -121,9 +121,7 @@ module.exports = function (db, router, auth, marked) {
       return next();
 
     res.render('post', {
-      title: post.title,
-      post: post,
-      category: cat
+      title: post.title
     });
   });
 
@@ -139,9 +137,7 @@ module.exports = function (db, router, auth, marked) {
       return next();
 
     res.render('post-edit', {
-      title: 'edit ' + post.title,
-      post: post,
-      category: cat
+      title: 'edit ' + post.title
     });
   });
 
@@ -157,7 +153,7 @@ module.exports = function (db, router, auth, marked) {
     p.tags = req.body.tags;
     p.rawContent = req.body.content;
     p.content = marked(req.body.content);
-    p.category = req.body.category._id;
+    p.categoryid = req.body.category._id;
     p.categorySlug = req.body.category.slug;
 
     p.save(function (err) {

@@ -1,3 +1,5 @@
+var escape = require('connect').utils.escape;
+
 module.exports = function (app) {
   var urls = {};
 
@@ -17,7 +19,9 @@ module.exports = function (app) {
   };
 
   var link = function (name, text, data) {
-    return '<a href="' + url(name, data) + '">' + text + '</a>';
+    var link = escape(url(name, data));
+    text = escape(text);
+    return '<a href="' + link + '">' + text + '</a>';
   };
 
   var router = Object.create(app);

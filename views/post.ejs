@@ -1,11 +1,21 @@
 <article>
-  <h2><%= post.title %></h2>
-  <% if (everyauth.loggedIn) { %>
+  <h2>
+    <%= post.title %>
     <small>
-      <%- router.link('edit-post', 'edit', post) %>
+      <%= moment(post.date).fromNow() %>
     </small>
-  <% } %>
-  <p><em>Date:</em> <%= post.date %></p>
-  <%- post.content %>
-  <p><em>Tags:</em> <%= post.tags.join(', ') %></p>
+    <% if (everyauth.loggedIn) { %>
+      <span>
+        <%- router.link('edit-post', 'edit', post) %>
+      </span>
+    <% } %>
+  </h2>
+  <div class="post-content">
+    <%- post.content %>
+  </div>
+
+  <div class="post-details">
+    <p><strong>Date:</strong> <%= post.date %></p>
+    <p><strong>Tags:</strong> <%= post.tags.join(', ') %></p>
+  </div>
 </article>
