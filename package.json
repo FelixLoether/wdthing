@@ -9,7 +9,7 @@
     "express": "2.5.x",
     "ejs": "0.7.x",
     "marked": "0.2.x",
-    "seq", "0.3.x",
+    "seq": "0.3.x",
     "moment": "1.5.x"
   },
   "engine": "node >= 0.6.1"
