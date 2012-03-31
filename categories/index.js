@@ -23,10 +23,6 @@ module.exports = function (db, router, auth) {
   });
 
   db.model('Category', Category);
-  var CategorySchema = Category;
-  Category = db.model('Category');
-
   require('./routes')(db, router, auth);
-
-  return CategorySchema;
+  return Category;
 };
