@@ -1,8 +1,3 @@
-<% if (everyauth.loggedIn) { %>
-  <small>
-    <%- router.link('edit-category', 'edit', category) %>
-  </small>
-<% } %>
 <ol class="unstyled">
   <%- partial('post-partial', {collection: posts, show: 'date'}) %>
 </ol>
