@@ -63,7 +63,6 @@ module.exports = function (app, db, router) {
     }
 
     if (users[auth]) {
-      console.log('auth');
       return users[auth];
     }
 
@@ -97,7 +96,6 @@ module.exports = function (app, db, router) {
   router.register('login', config.loginPath);
   router.get(router.url('login'), function (req, res) {
     req.session.redirectUrl = req.headers.referer;
-    console.log('redirect', req.headers.referer);
     res.render('login', {title: 'login'});
   });
 
