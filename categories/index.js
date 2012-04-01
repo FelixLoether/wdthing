@@ -24,5 +24,4 @@ module.exports = function (db, router, auth) {
 
   db.model('Category', Category);
   require('./routes')(db, router, auth);
-  return Category;
 };

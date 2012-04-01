@@ -37,5 +37,4 @@ module.exports = function (db, router, auth, marked) {
 
   db.model('Post', Post);
   require('./routes')(db, router, auth, marked);
-  return Post;
 };
