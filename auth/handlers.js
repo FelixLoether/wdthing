@@ -36,7 +36,7 @@ module.exports = function (db, users) {
 
       if (!invitation) {
         var e = new Error('Invalid invitation');
-        e.name = 'Invitation error';
+        e.name = 400;
         promise.fail(e);
         return next(e);
       }

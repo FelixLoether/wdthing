@@ -23,7 +23,7 @@ module.exports = function (app, db, router) {
     if (req.user)
       next();
     else
-      res.redirect(router.url('login'), 403);
+      res.redirect(router.url('login'), 303);
   };
 };
 
