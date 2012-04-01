@@ -1,8 +1,10 @@
 module.exports = function (db, users) {
-  var handleInvitation = function (sess, promise, name, auth) {
+  var handleInvitation = function (sess, promise, name, auth, next) {
     var userCreated = function (err) {
-      if (err)
-        return promise.fulfill([err]);
+      if (err) {
+        promise.fail(err);
+        return next(err);
+      }
 
       users[auth] = user;
       promise.fulfill(user);
@@ -17,16 +19,27 @@ module.exports = function (db, users) {
     };
 
     var invitationRemoved = function (err) {
-      if (err)
-        return promise.fulfill([err]);
+      if (err) {
+        promise.fail(err);
+        return next(err);
+      }
 
       delete sess.invitation;
       createUser();
     };
 
     var invitationFound = function (err, invitation) {
-      if (err)
-        return promise.fulfill([err]);
+      if (err) {
+        promise.fail(err);
+        return next(err);
+      }
+
+      if (!invitation) {
+        var e = new Error('Invalid invitation');
+        e.name = 'Invitation error';
+        promise.fail(e);
+        return next(e);
+      }
 
       invitation.remove(invitationRemoved);
     };
@@ -34,11 +47,11 @@ module.exports = function (db, users) {
     db.model('Invitation').findOne({id: sess.invitation}, invitationFound);
   };
 
-  var findOrCreateUser = function (sess, service, id, name, promise) {
+  var findOrCreateUser = function (sess, service, id, name, promise, next) {
     var auth = service + '-' + id;
 
     if (sess && sess.invitation) {
-      handleInvitation(sess, promise, name, auth);
+      handleInvitation(sess, promise, name, auth, next);
       return promise;
     }
 
@@ -46,11 +59,17 @@ module.exports = function (db, users) {
       return users[auth];
 
     db.model('User').findOne({id: auth}, function (err, user) {
-      if (err)
-        return promise.fulfill([err]);
+      if (err) {
+        promise.fail(err);
+        return next(err);
+      }
 
-      if (!user)
-        return promise.fulfill([new Error('User not found')]);
+      if (!user) {
+        var e = new Error('User not found');
+        e.name = 500;
+        promise.fail(e);
+        return next(e);
+      }
 
       users[auth] = user;
       promise.fulfill(user);

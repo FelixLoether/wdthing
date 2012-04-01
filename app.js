@@ -21,6 +21,7 @@ require('./categories')(db, router, auth);
 require('./posts')(db, router, auth, marked);
 require('./invitations')(db, router, auth);
 require('./route-index')(db, router);
+require('./error')(router);
 
 var categories = require('./live-categories')(db);
 

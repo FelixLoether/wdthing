@@ -26,6 +26,9 @@ module.exports = function (db, router, auth) {
   });
 
   router.get(router.url('invitation'), function (req, res) {
+    if (req.user)
+      return res.redirect(router.url('index'));
+
     if (req.params.id)
       req.session.invitation = req.params.id;
     res.redirect(router.url('login'));

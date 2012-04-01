@@ -13,4 +13,8 @@ module.exports = function (everymodule, users) {
     req.logout();
     this.redirect(res, req.session.redirectUrl || this.logoutRedirectPath());
   });
+
+  everymodule.moduleErrback(function (err) {
+    console.log(err);
+  });
 };
