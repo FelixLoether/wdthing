@@ -35,6 +35,7 @@ module.exports = function (db, users) {
       }
 
       if (!invitation) {
+        delete sess.invitation;
         var e = new Error('Invalid invitation');
         e.name = 400;
         promise.fail(e);
