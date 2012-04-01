@@ -16,9 +16,9 @@ category is published on a category's publish-weekday).
 3. Create a user using the MongoDB shell (or whatever other tool you prefer).
    The project doesn't quite support creating a first user.
 
-       db.users.save({name: '<Your Name>', id: 'google-<Your Google Account Id>'})
+        db.users.save({name: '<Your Name>', id: 'google-<Your Google Account Id>'})
 
-   Example:
+    Example:
 
-       db.users.save({name: 'Felix', id: 'google-11930093811932843'})
+        db.users.save({name: 'Felix', id: 'google-11930093811932843'})
 
