@@ -67,7 +67,7 @@ module.exports = function (db, users) {
 
       if (!user) {
         var e = new Error('User not found');
-        e.name = 500;
+        e.name = 400;
         promise.fail(e);
         return next(e);
       }
