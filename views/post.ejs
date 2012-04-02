@@ -1,21 +1,22 @@
 <article>
-  <h2>
-    <%= post.title %>
-    <small>
-      <%= moment(post.date).fromNow() %>
-    </small>
-    <% if (everyauth.loggedIn) { %>
-      <span>
-        <%- router.link('edit-post', 'edit', post) %>
-      </span>
-    <% } %>
-  </h2>
-  <div class="post-content">
-    <%- post.content %>
-  </div>
+  <header>
+    <h2>
+      <%= post.title %>
+      <% if (everyauth.loggedIn) { %>
+        <span>
+          <%- router.link('edit-post', 'edit', post) %>
+        </span>
+      <% } %>
+    </h2>
 
-  <div class="post-details">
-    <p><strong>Date:</strong> <%= post.date %></p>
-    <p><strong>Tags:</strong> <%= post.tags.join(', ') %></p>
-  </div>
+    <p>
+      Posted
+      <time datetime="<%= post.date.toISOString() %>" pubdate>
+        <%= moment(post.date).fromNow() %></time>.
+
+      Tags: <%= post.tags.join(', ') %>
+    </p>
+  </header>
+
+  <%- post.content %>
 </article>

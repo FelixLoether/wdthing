@@ -5,6 +5,9 @@
     <title>wdthing - <%= title %></title>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css">
+    <!--[if IE lt 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
     <style>
       p {
         text-align: justify;
@@ -32,16 +35,9 @@
         margin-bottom: 5px;
       }
 
-      .post-content {
-        border-bottom: 1px solid #EEEEEE;
-      }
-
-      .post-details {
-        margin-top: 5px;
-      }
-
-      .post-details > p {
-        margin: 0;
+      article > header > p {
+        font-size: small;
+        color: #999999;
       }
 
       textarea {
@@ -69,9 +65,11 @@
       </div>
       <div class="row">
         <div class="span8">
-          <h1>
-            <a href="<%- router.url('index') %>">wdthing<small>.com</small></a>
-          </h1>
+          <header>
+            <h1>
+              <a href="<%- router.url('index') %>">wdthing<small>.com</small></a>
+            </h1>
+          </header>
           <%- body %>
         </div>
         <div class="span4">

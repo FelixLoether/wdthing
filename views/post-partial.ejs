@@ -1,24 +1,30 @@
 <% var post = posts[indexInCollection] %>
-<h2>
-  <%- router.link('post', post.title, post) %>
-  <small>
-    <% if (show === 'category') { %>
-      <%- router.link('category', post.category.name, post.category) %>
-    <% } else { %>
-      <%= moment(post.date).fromNow() %>
+<article>
+  <header>
+  <h2>
+    <%- router.link('post', post.title, post) %>
+    <small>
+      <% if (show === 'category') { %>
+        <%- router.link('category', post.category.name, post.category) %>
+      <% } else { %>
+        <time datetime="<%= post.date.toISOString() %>" pubdate>
+          <%= moment(post.date).fromNow() %>
+        </time>
+      <% } %>
+    </small>
+    <% if (everyauth.loggedIn) { %>
+      <span><%- router.link('edit-post', 'edit', post) %></span>
     <% } %>
-  </small>
-  <% if (everyauth.loggedIn) { %>
-    <span><%- router.link('edit-post', 'edit', post) %></span>
-  <% } %>
-</h2>
-<%
-var preview = post.content.split('</p>')
+  </h2>
+  </header>
+  <%
+    var preview = post.content.split('</p>')
                           .slice(0, 3)
                           .join('</p>')
                           .replace(/\s+$/, '');
-  if (preview.slice(-4) !== '</p>')
+    if (preview.slice(-4) !== '</p>')
     preview += '</p>';
-%>
-<%- preview %>
-<%- router.link('post', 'Read more »', post) %>
+  %>
+  <%- preview %>
+  <%- router.link('post', 'Read more »', post) %>
+</article>
