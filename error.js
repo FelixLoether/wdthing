@@ -1,6 +1,7 @@
 module.exports = function (app) {
   app.error(function (err, req, res, next) {
     res.render('error', {
+      status: +err.name || 500,
       title: 'Error!',
       error: err
     });
