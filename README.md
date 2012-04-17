@@ -22,14 +22,12 @@ category is published on a category's publish-weekday).
 
         db.users.save({name: 'Felix', id: 'google-11930093811932843'})
 4. Add files the secret configurations.
-
     - `secret-config.js` expects something like this:
         
             module.exports = {
               session: { secret: '<Your Secret>' },
               port: <Your Port>
             }
-
     - `auth/secret-config.js` expects this:
 
             module.exports = {
@@ -38,7 +36,6 @@ category is published on a category's publish-weekday).
                 secret: '<Your Google App Secret>'
               }
             }
-
     - `db/secret-config.js` expects this:
 
             module.exports = {
