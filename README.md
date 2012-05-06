@@ -7,7 +7,7 @@ category is published on a category's publish-weekday).
 ## Requirements
 
 - Requirements listed in `package.json`.
-- MongoDB
+- MongoDB.
 
 ## Installation
 
